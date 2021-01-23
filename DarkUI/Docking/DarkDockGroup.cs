@@ -654,6 +654,40 @@ namespace DarkUI.Docking
             Invalidate();
         }
 
+        protected override void OnMouseWheel(MouseEventArgs e)
+        {
+            base.OnMouseWheel(e);
+
+            if (_tabs.Count < 2 || !_tabs.ContainsKey(VisibleContent))
+                return;
+
+            var inTabArea = false;
+            var tabs = _tabs.Keys.ToList();
+            var currentTab = tabs.IndexOf(VisibleContent);
+
+            foreach (var tab in _tabs.Values)
+                if (RectangleToTabArea(tab.ClientRectangle).Contains(e.Location))
+                {
+                    inTabArea = true;
+                    break;
+                }
+
+            if (inTabArea)
+            {
+                if (e.Delta > 0) currentTab++;
+                else             currentTab--;
+
+                if (currentTab >= tabs.Count) currentTab = 0;
+                else if (currentTab < 0) currentTab = tabs.Count - 1;
+
+                DockPanel.ActiveContent = tabs[currentTab];
+                EnsureVisible();
+
+                if (VisibleContent != null)
+                    DockPanel.ActiveContent = VisibleContent;
+            }
+        }
+
         private void TabMenuItem_Select(object sender, EventArgs e)
         {
             var menuItem = sender as ToolStripMenuItem;
@@ -703,6 +737,15 @@ namespace DarkUI.Docking
             using (var b = new SolidBrush(Colors.GreyBackground))
             {
                 g.FillRectangle(b, ClientRectangle);
+            }
+
+            // Left color divider for last bottom group
+            if (DockArea == DarkDockArea.Bottom && Order > 0)
+            {
+                using (var p = new Pen(Colors.DarkBorder))
+                {
+                    g.DrawLine(p, ClientRectangle.Left, 0, ClientRectangle.Left, ClientRectangle.Height);
+                }
             }
 
             if (!_tabArea.Visible)

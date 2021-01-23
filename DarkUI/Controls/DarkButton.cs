@@ -1,4 +1,5 @@
 ﻿using DarkUI.Config;
+using DarkUI.Extensions;
 using System;
 using System.ComponentModel;
 using System.Drawing;
@@ -25,6 +26,22 @@ namespace DarkUI.Controls
         #endregion
 
         #region Designer Property Region
+
+        public bool Checked
+        {
+            get { return _checked; }
+            set 
+            {
+                if (value == _checked)
+                    return;
+
+                _checked = value;
+                CheckedChanged?.Invoke(this, new EventArgs());
+                Invalidate();
+            }
+        }
+        private bool _checked;
+        public EventHandler CheckedChanged;
 
         public new string Text
         {
@@ -162,6 +179,10 @@ namespace DarkUI.Controls
         {
             get { return false; }
         }
+
+        [Category("Appearance")]
+        [DefaultValue(false)]
+        public bool UseForeColor { get; set; }
 
         #endregion
 
@@ -341,43 +362,61 @@ namespace DarkUI.Controls
             var g = e.Graphics;
             var rect = new Rectangle(0, 0, ClientSize.Width, ClientSize.Height);
 
-            var textColor = Colors.LightText;
+            var textColor = UseForeColor? ForeColor : Colors.LightText;
             var borderColor = Colors.GreySelection;
-            var fillColor = _useGenericBackColor ? (_isDefault ? Colors.DarkBlueBackground : Colors.LightBackground) : BackColor;
-            var hoverColor = _useGenericBackColor ? (_isDefault ? Colors.BlueBackground : Colors.LighterBackground) : ControlPaint.Light(BackColor);
+            var fillColor = _useGenericBackColor ? (_isDefault ? Colors.DarkBlueBackground : Colors.LightBackground) : BackColor.Multiply(Colors.Brightness);
+            var hoverColor = _useGenericBackColor ? (_isDefault ? Colors.BlueBackground : Colors.LighterBackground) : ControlPaint.Light(BackColor.Multiply(Colors.Brightness));
 
             if (Enabled)
             {
-                switch (ButtonStyle)
+                if (Checked)
                 {
-                    case DarkButtonStyle.Normal:
-                        if (Focused && TabStop)
-                            borderColor = Colors.BlueHighlight;
+                    fillColor = Colors.HighlightFill;
 
-                        switch (ButtonState)
-                        {
-                            case DarkControlState.Hover:
-                                fillColor = hoverColor;
-                                break;
-                            case DarkControlState.Pressed:
-                                fillColor = Colors.DarkBackground;
-                                break;
-                        }
-                        break;
-                    case DarkButtonStyle.Flat:
-                        switch (ButtonState)
-                        {
-                            case DarkControlState.Normal:
-                                fillColor = Colors.GreyBackground;
-                                break;
-                            case DarkControlState.Hover:
-                                fillColor = Colors.MediumBackground;
-                                break;
-                            case DarkControlState.Pressed:
-                                fillColor = Colors.DarkBackground;
-                                break;
-                        }
-                        break;
+                    switch (ButtonState)
+                    {
+                        case DarkControlState.Hover:
+                            borderColor = Colors.GreyHighlight;
+                            break;
+
+                        case DarkControlState.Normal:
+                            borderColor = Colors.HighlightBase;
+                            break;
+                    }
+                }
+                else
+                {
+                    switch (ButtonStyle)
+                    {
+                        case DarkButtonStyle.Normal:
+                            if (Focused && TabStop)
+                                borderColor = Colors.BlueHighlight;
+
+                            switch (ButtonState)
+                            {
+                                case DarkControlState.Hover:
+                                    fillColor = hoverColor;
+                                    break;
+                                case DarkControlState.Pressed:
+                                    fillColor = Colors.DarkBackground;
+                                    break;
+                            }
+                            break;
+                        case DarkButtonStyle.Flat:
+                            switch (ButtonState)
+                            {
+                                case DarkControlState.Normal:
+                                    fillColor = Colors.GreyBackground;
+                                    break;
+                                case DarkControlState.Hover:
+                                    fillColor = Colors.MediumBackground;
+                                    break;
+                                case DarkControlState.Pressed:
+                                    fillColor = Colors.DarkBackground;
+                                    break;
+                            }
+                            break;
+                    }
                 }
             }
             else
@@ -430,8 +469,12 @@ namespace DarkUI.Controls
                         break;
                 }
 
-                //g.DrawImage(Image, x, y);
-                g.DrawImage(Image, new Rectangle(x, y, Image.Width, Image.Height));
+                var imgRect = new Rectangle(x, y, Image.Width, Image.Height);
+                g.DrawImage(Image, imgRect);
+
+                // Dim brightness according to config
+                using (var b = new SolidBrush(fillColor.MultiplyAlpha(1.0f - Colors.Brightness)))
+                    g.FillRectangle(b, imgRect);
             }
 
             using (var b = new SolidBrush(textColor))

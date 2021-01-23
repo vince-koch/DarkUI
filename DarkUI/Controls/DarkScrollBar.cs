@@ -4,6 +4,7 @@ using System.ComponentModel;
 using System.Drawing;
 using System.Windows.Forms;
 using DarkUI.Icons;
+using DarkUI.Extensions;
 
 namespace DarkUI.Controls
 {
@@ -79,9 +80,7 @@ namespace DarkUI.Controls
                 _value = value;
 
                 UpdateThumb(true);
-
-                if (ValueChanged != null)
-                    ValueChanged(this, new ScrollValueEventArgs(Value));
+                ValueChanged?.Invoke(this, new ScrollValueEventArgs(Value));
             }
         }
 
@@ -511,10 +510,11 @@ namespace DarkUI.Controls
                     break;
             }
 
-            g.DrawImage(upIcon,
-                                _upArrowArea.Left + _upArrowArea.Width / 2 - upIcon.Width / 2,
-                                _upArrowArea.Top + _upArrowArea.Height / 2 - upIcon.Height / 2);
+            var upIconRect = new Rectangle(_upArrowArea.Left + _upArrowArea.Width / 2 - upIcon.Width / 2,
+                                           _upArrowArea.Top + _upArrowArea.Height / 2 - upIcon.Height / 2, upIcon.Width, upIcon.Height);
 
+            g.DrawImage(upIcon.SetOpacity(Colors.Brightness), upIconRect);
+            
             // Down arrow
             var downIcon = _downArrowHot ? ScrollIcons.scrollbar_arrow_hot : ScrollIcons.scrollbar_arrow_standard;
 
@@ -527,9 +527,10 @@ namespace DarkUI.Controls
             if (_scrollOrientation == DarkScrollOrientation.Horizontal)
                 downIcon.RotateFlip(RotateFlipType.Rotate270FlipNone);
 
-            g.DrawImage(downIcon,
-                                _downArrowArea.Left + _downArrowArea.Width / 2 - downIcon.Width / 2,
-                                _downArrowArea.Top + _downArrowArea.Height / 2 - downIcon.Height / 2);
+            var downIconRect = new Rectangle(_downArrowArea.Left + _downArrowArea.Width / 2 - downIcon.Width / 2,
+                                             _downArrowArea.Top + _downArrowArea.Height / 2 - downIcon.Height / 2, downIcon.Width, downIcon.Height);
+
+            g.DrawImage(downIcon.SetOpacity(Colors.Brightness), downIconRect);
 
             // Draw thumb
             if (!Enabled)

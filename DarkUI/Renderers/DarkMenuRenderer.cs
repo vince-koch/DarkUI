@@ -3,6 +3,7 @@ using System;
 using System.Drawing;
 using System.Windows.Forms;
 using DarkUI.Icons;
+using DarkUI.Extensions;
 
 namespace DarkUI.Renderers
 {
@@ -63,12 +64,12 @@ namespace DarkUI.Renderers
             var rect = new Rectangle(e.ImageRectangle.Left - 2, e.ImageRectangle.Top - 2,
                                          e.ImageRectangle.Width + 4, e.ImageRectangle.Height + 4);
 
-            using (var b = new SolidBrush(Colors.MenuItemToggledOnFill))
+            using (var b = new SolidBrush(Colors.HighlightFill))
             {
                 g.FillRectangle(b, rect);
             }
 
-            using (var p = new Pen(Colors.MenuItemToggledOnBorder))
+            using (var p = new Pen(Colors.HighlightBase))
             {
                 var modRect = new Rectangle(rect.Left, rect.Top, rect.Width - 1, rect.Height - 1);
                 g.DrawRectangle(p, modRect);
@@ -76,8 +77,18 @@ namespace DarkUI.Renderers
 
             if (e.Item.ImageIndex == -1 && String.IsNullOrEmpty(e.Item.ImageKey) && e.Item.Image == null)
             {
-                g.DrawImage(MenuIcons.tick, new Point(e.ImageRectangle.Left, e.ImageRectangle.Top));
+                g.DrawImage(MenuIcons.tick.SetOpacity(Colors.Brightness), new Point(e.ImageRectangle.Left, e.ImageRectangle.Top));
             }
+        }
+
+        protected override void OnRenderItemImage(ToolStripItemImageRenderEventArgs e)
+        {
+            var g = e.Graphics;
+
+            if (e.Image == null)
+                return;
+
+            g.DrawImage(e.Image.SetOpacity(Colors.Brightness), new Point(e.ImageRectangle.Left, e.ImageRectangle.Top));
         }
 
         protected override void OnRenderSeparator(ToolStripSeparatorRenderEventArgs e)
@@ -109,7 +120,7 @@ namespace DarkUI.Renderers
             if (!e.Item.Enabled)
                 return;
 
-            var bgColor = e.Item.Selected ? Colors.GreyHighlight : e.Item.BackColor;
+            var bgColor = e.Item.Selected ? Colors.GreyHighlight : Colors.GreyBackground;
 
             // Normal item
             var rect = new Rectangle(2, 0, e.Item.Width - 3, e.Item.Height);

@@ -11,6 +11,7 @@ using System.Drawing.Design;
 using System.Reflection;
 using System.Drawing.Drawing2D;
 using DarkUI.Config;
+using DarkUI.Extensions;
 
 namespace DarkUI.Controls
 {
@@ -25,6 +26,8 @@ namespace DarkUI.Controls
         private bool _isInit;
         private ScrollBars _scrollBars = ScrollBars.Both;
         private int _dragPosition = -1;
+        private int _dragColumnIndex = -1;
+        private bool _dragValue = false;
 
         private static readonly DataGridViewCellStyle _cellStyleUnfocusedEven = GetCellStyle(false, false, false);
         private static readonly DataGridViewCellStyle _cellStyleUnfocusedOdd = GetCellStyle(false, true, false);
@@ -83,9 +86,12 @@ namespace DarkUI.Controls
 
             _base.CellFormatting += BaseCellFormatting;
             _base.CellValueChanged += BaseCellValueChanged;
+            _base.SelectionChanged += BaseSelectionChanged;
             _base.MouseWheel += BaseMouseWheel;
             _base.KeyDown += BaseKeyDown;
             _base.MouseMove += BaseMouseMove;
+            _base.CellMouseDown += BaseCellMouseDown;
+            _base.CellMouseEnter += BaseCellMouseEnter;
             _base.DragEnter += BaseDragEnter;
             _base.DragOver += BaseDragOver;
             _base.DragLeave += BaseDragLeave;
@@ -153,9 +159,81 @@ namespace DarkUI.Controls
             }
         }
 
+        private void BaseSelectionChanged(object sender, EventArgs e)
+        {
+            if (DisableSelection)
+                _base.ClearSelection();
+        }
+
         private void BaseMouseWheel(object sender, MouseEventArgs e)
         {
             _vScrollBar.ScrollBy(e.Delta < 0 ? 1 : -1);
+        }
+
+        private void ToggleFirstCheckbox(DataGridViewCellMouseEventArgs e)
+        {
+            for (int i = 0; i < _base.Columns.Count; i++)
+            {
+                if (_base.Columns[i] is DarkDataGridViewCheckBoxColumn || _base.Columns[i] is DataGridViewCheckBoxColumn)
+                {
+                    if (i != e.ColumnIndex)
+                    {
+                        _base.Rows[e.RowIndex].Cells[i].Value = !((bool)_base.Rows[e.RowIndex].Cells[i].Value);
+                        _base.RefreshEdit();
+                    }
+                    break;
+                }
+            }
+        }
+
+        private void BaseCellMouseDown(object sender, DataGridViewCellMouseEventArgs e)
+        {
+            if (e.RowIndex == -1 || e.Button != MouseButtons.Left) return;
+
+            var cell = _base.Rows[e.RowIndex].Cells[e.ColumnIndex];
+            if (cell is DarkDataGridViewCheckBoxCell || cell is DataGridViewCheckBoxCell)
+            {
+                cell.Value = !((bool)cell.Value);
+                _dragValue = (bool)cell.Value;
+                _dragColumnIndex = e.ColumnIndex;
+                _base.RefreshEdit();
+                return;
+            }
+
+            if (cell is DarkDataGridViewComboBoxCell)
+            {
+                var buttonRect = new Rectangle(cell.Size.Width - SystemInformation.VerticalScrollBarWidth - 1,
+                                               0, SystemInformation.VerticalScrollBarWidth, cell.Size.Height - 1);
+
+                // Immediately start edit, if user clicked on a button.
+                if (buttonRect.Contains(e.Location))
+                {
+                    _base.CurrentCell = cell;
+                    _base.BeginEdit(true);
+                    return;
+                }
+            }
+
+            if (ToggleCheckBoxOnClick)
+                ToggleFirstCheckbox(e);
+        }
+
+        private void BaseCellMouseEnter(object sender, DataGridViewCellEventArgs e)
+        {
+            if (e.RowIndex == -1 || e.ColumnIndex != _dragColumnIndex) return;
+
+            var cell = _base.Rows[e.RowIndex].Cells[e.ColumnIndex];
+            if (cell is DarkDataGridViewCheckBoxCell || cell is DataGridViewCheckBoxCell)
+            {
+                if (Control.MouseButtons.HasFlag(MouseButtons.Left))
+                {
+                    if ((bool)cell.Value != _dragValue)
+                    {
+                        cell.Value = _dragValue;
+                        _base.RefreshEdit();
+                    }
+                }
+            }
         }
 
         private void BaseKeyDown(object sender, KeyEventArgs e)
@@ -414,6 +492,19 @@ namespace DarkUI.Controls
             return result;
         }
 
+        public void PaintCell(DataGridViewCellPaintingEventArgs e, Image image)
+        {
+            e.Paint(e.CellBounds, DataGridViewPaintParts.All);
+
+            var imgRect = new Rectangle(e.CellBounds.Left + (e.CellBounds.Width - image.Width) / 2 - 1,
+                                        e.CellBounds.Top + (e.CellBounds.Height - image.Height) / 2,
+                                        image.Width, image.Height);
+
+            e.Graphics.DrawImage(image.SetOpacity(Colors.Brightness), imgRect.X, imgRect.Y, imgRect.Width, imgRect.Height);
+
+            e.Handled = true;
+        }
+
         private bool _updateScrollBarLayout;
 
         private void UpdateScrollBarLayout()
@@ -437,7 +528,7 @@ namespace DarkUI.Controls
                     // Setup rows
                     int rowCount = _base.Rows.Count + 1;
                     int rowInView = CountVisibleRows(_base.FirstDisplayedScrollingRowIndex, size.Height - _scrollSize);
-                    bool rowScrollVisible = _scrollBars.HasFlag(ScrollBars.Vertical) && rowInView < rowCount;
+                    bool rowScrollVisible = _scrollBars.HasFlag(ScrollBars.Vertical) && rowInView < rowCount - 1;
                     if (rowScrollVisible)
                     {
                         _vScrollBar.ViewSize = rowInView + 1;
@@ -783,6 +874,17 @@ namespace DarkUI.Controls
         [DefaultValue(false)]
         [EditorBrowsable(EditorBrowsableState.Advanced)]
         public bool VirtualMode { get { return _base.VirtualMode; } set { _base.VirtualMode = value; } }
+
+        [DefaultValue(false)]
+        [Category("Misc")]
+        [Description("Toggles checkbox value on click in first encountered checkbox cell.")]
+        public bool ToggleCheckBoxOnClick { get; set; }
+
+        [DefaultValue(false)]
+        [Category("Misc")]
+        [Description("Completely disables selection.")]
+        public bool DisableSelection { get; set; }
+
         public event EventHandler AllowUserToAddRowsChanged { add { _base.AllowUserToAddRowsChanged += value; } remove { _base.AllowUserToAddRowsChanged -= value; } }
         public event EventHandler AllowUserToDeleteRowsChanged { add { _base.AllowUserToDeleteRowsChanged += value; } remove { _base.AllowUserToDeleteRowsChanged -= value; } }
         public event EventHandler AllowUserToOrderColumnsChanged { add { _base.AllowUserToOrderColumnsChanged += value; } remove { _base.AllowUserToOrderColumnsChanged -= value; } }
@@ -1086,6 +1188,19 @@ namespace DarkUI.Controls
             }
         }
 
+        [DefaultValue(false)]
+        public bool Hidden
+        {
+            get { return _hidden ?? !((OwningColumn as DarkDataGridViewButtonColumn)?.Visible ?? true); }
+            set
+            {
+                if (value == _hidden)
+                    return;
+                _hidden = value;
+                DataGridView?.InvalidateCell(this);
+            }
+        }
+        private bool? _hidden;
 
         protected override void OnMouseEnter(int rowIndex)
         {
@@ -1123,7 +1238,6 @@ namespace DarkUI.Controls
                 base.OnMouseDown(e);
         }
 
-
         protected override void Paint(Graphics graphics, Rectangle clipBounds, Rectangle cellBounds, int rowIndex,
             DataGridViewElementStates elementState, object value, object formattedValue, string errorText,
             DataGridViewCellStyle cellStyle, DataGridViewAdvancedBorderStyle advancedBorderStyle, DataGridViewPaintParts paintParts)
@@ -1146,6 +1260,9 @@ namespace DarkUI.Controls
 
             if (paintParts.HasFlag(DataGridViewPaintParts.Border))
                 PaintBorder(graphics, clipBounds, cellBounds, cellStyle, advancedBorderStyle);
+
+            if (Hidden)
+                return;
 
             // Choose button colors
             Color textColor = cellStyle.ForeColor;
@@ -1232,13 +1349,76 @@ namespace DarkUI.Controls
         }
     }
 
-    public class DarkDataGridViewCheckBoxCell : DataGridViewCheckBoxCell
-    { }
-
-    public class DarkDataGridViewCheckBoxColumn : DataGridViewCheckBoxColumn
+    public class DarkDataGridViewComboBoxCell : DataGridViewComboBoxCell
     {
-        public DarkDataGridViewCheckBoxColumn()
+        private static readonly Padding _padding = new Padding(1, 1, 2, 2);
+        private static readonly StringFormat _stringFormat = new StringFormat
         {
+            LineAlignment = StringAlignment.Center,
+            Alignment = StringAlignment.Near,
+            Trimming = StringTrimming.EllipsisCharacter
+        };
+
+        protected override void Paint(Graphics graphics, Rectangle clipBounds, Rectangle cellBounds, int rowIndex,
+            DataGridViewElementStates elementState, object value, object formattedValue, string errorText,
+            DataGridViewCellStyle cellStyle, DataGridViewAdvancedBorderStyle advancedBorderStyle, DataGridViewPaintParts paintParts)
+        {
+            if (FlatStyle != FlatStyle.Flat)
+            {
+                base.Paint(graphics, clipBounds, cellBounds, rowIndex, elementState, value,
+                    formattedValue, errorText, cellStyle, advancedBorderStyle, paintParts);
+                return;
+            }
+
+            var buttonIcon  = Icons.ComboBoxIcons.combobox_arrow;
+            var buttonColor = Colors.LightBackground;
+            var borderColor = Colors.GreySelection;
+            var textColor   = cellStyle.ForeColor;
+
+            Rectangle contentBounds = new Rectangle(cellBounds.X + _padding.Left, cellBounds.Y + _padding.Top,
+                                                    cellBounds.Width - _padding.Horizontal - SystemInformation.VerticalScrollBarWidth, cellBounds.Height - _padding.Vertical);
+
+            Rectangle buttonRect = new Rectangle(cellBounds.X + cellBounds.Width - SystemInformation.VerticalScrollBarWidth - 1, 
+                                                 cellBounds.Y, SystemInformation.VerticalScrollBarWidth, cellBounds.Height - 1);
+
+            Rectangle buttonIconRect = new Rectangle(buttonRect.Left + (buttonRect.Width - buttonIcon.Width) / 2, 
+                                                     buttonRect.Top + (buttonRect.Height / 2 - buttonIcon.Height / 2), 
+                                                     buttonIcon.Width, buttonIcon.Height);
+            // Paint background
+            if (paintParts.HasFlag(DataGridViewPaintParts.Background))
+            {
+                Color backColor = elementState.HasFlag(DataGridViewElementStates.Selected) ?
+                cellStyle.SelectionBackColor : cellStyle.BackColor;
+                using (var brush = new SolidBrush(backColor))
+                    graphics.FillRectangle(brush, cellBounds);
+            }
+
+            // Draw border
+            if (paintParts.HasFlag(DataGridViewPaintParts.Border))
+                PaintBorder(graphics, clipBounds, cellBounds, cellStyle, advancedBorderStyle);
+
+            // Draw text
+            if (paintParts.HasFlag(DataGridViewPaintParts.ContentForeground))
+                using (var brush = new SolidBrush(textColor))
+                    graphics.DrawString(formattedValue?.ToString() ?? "", cellStyle.Font, brush, contentBounds, _stringFormat);
+
+            // Draw button
+            using (var buttonBrush = new SolidBrush(buttonColor))
+                graphics.FillRectangle(buttonBrush, buttonRect);
+            graphics.DrawImage(buttonIcon, buttonIconRect);
+            ControlPaint.DrawBorder(graphics, buttonRect, borderColor, ButtonBorderStyle.Solid);
+
+            // Paint error
+            if (DataGridView.ShowCellErrors && paintParts.HasFlag(DataGridViewPaintParts.ErrorIcon))
+                PaintErrorIcon(graphics, clipBounds, contentBounds, errorText);
+        }
+    }
+
+    public class DarkDataGridViewComboBoxColumn : DataGridViewComboBoxColumn
+    {
+        public DarkDataGridViewComboBoxColumn()
+        {
+            CellTemplate = new DarkDataGridViewComboBoxCell();
             base.FlatStyle = FlatStyle.Flat;
         }
 
@@ -1246,6 +1426,103 @@ namespace DarkUI.Controls
         public new FlatStyle FlatStyle
         {
             get { return FlatStyle.Flat; }
+        }
+
+        public sealed override DataGridViewCell CellTemplate
+        {
+            get { return base.CellTemplate; }
+            set { base.CellTemplate = value; }
+        }
+    }
+
+    public class DarkDataGridViewCheckBoxCell : DataGridViewCheckBoxCell
+    {
+        protected override void Paint(Graphics graphics, Rectangle clipBounds, Rectangle cellBounds, int rowIndex,
+            DataGridViewElementStates elementState, object value, object formattedValue, string errorText,
+            DataGridViewCellStyle cellStyle, DataGridViewAdvancedBorderStyle advancedBorderStyle, DataGridViewPaintParts paintParts)
+        {
+            if (FlatStyle == FlatStyle.System)
+            {
+                base.Paint(graphics, clipBounds, cellBounds, rowIndex, elementState, value,
+                    formattedValue, errorText, cellStyle, advancedBorderStyle, paintParts);
+                return;
+            }
+
+            // Paint background
+            if (paintParts.HasFlag(DataGridViewPaintParts.Background))
+            {
+                Color backColor = elementState.HasFlag(DataGridViewElementStates.Selected) ?
+                cellStyle.SelectionBackColor : cellStyle.BackColor;
+                using (var brush = new SolidBrush(backColor))
+                    graphics.FillRectangle(brush, cellBounds);
+            }
+
+            if (paintParts.HasFlag(DataGridViewPaintParts.Border))
+                PaintBorder(graphics, clipBounds, cellBounds, cellStyle, advancedBorderStyle);
+
+            // Choose button colors
+            var borderColor = Colors.LightText;
+            var fillColor = Colors.LightestBackground;
+
+            // Size
+            const int size = Consts.CheckBoxSize;
+
+            var hS = (int)Math.Round(size / 2.0d, MidpointRounding.AwayFromZero);
+            var qS = (int)Math.Round((size - 4) / 2.0d, MidpointRounding.AwayFromZero);
+            var hW = (int)Math.Round(cellBounds.Width / 2.0d, MidpointRounding.AwayFromZero);
+            var hH = (int)Math.Round(cellBounds.Height / 2.0d, MidpointRounding.AwayFromZero);
+
+            // Bounds
+            Rectangle boxRect = new Rectangle(cellBounds.X + hW - hS, cellBounds.Y + hH - hS - 1, size, size);
+            Rectangle checkBoxRect = new Rectangle(cellBounds.X + hW - hS + 2, cellBounds.Y + hH - qS - 1, size - 3, size - 3);
+
+            using (var b = new SolidBrush(Colors.GreyBackground))
+                graphics.FillRectangle(b, boxRect);
+
+            using (var p = new Pen(borderColor))
+                graphics.DrawRectangle(p, boxRect);
+
+            if ((bool)formattedValue == true)
+            {
+                Rectangle checkBoxRectCross = checkBoxRect;
+                checkBoxRectCross.Inflate(new Size(-1, -1));
+                using (var p = new Pen(fillColor, 2) { StartCap = LineCap.Round, EndCap = LineCap.Round })
+                {
+                    graphics.SmoothingMode = SmoothingMode.HighQuality;
+                    graphics.DrawLines(p, new Point[]
+                        {
+                                new Point(checkBoxRectCross.Left - 1, checkBoxRectCross.Bottom - checkBoxRectCross.Height / 2 - 1),
+                                new Point(checkBoxRectCross.Left + checkBoxRectCross.Width / 2 - 1, checkBoxRectCross.Bottom - 1),
+                                new Point(checkBoxRectCross.Right - 1, checkBoxRectCross.Top)
+                        });
+                    graphics.SmoothingMode = SmoothingMode.Default;
+                }
+            }
+        }
+
+        // Absorb content click mouse events, because it's intercepted globally in parent DGV event handlers
+        protected override void OnContentClick(DataGridViewCellEventArgs e) { }
+        protected override void OnContentDoubleClick(DataGridViewCellEventArgs e) { }
+    }
+
+    public class DarkDataGridViewCheckBoxColumn : DataGridViewCheckBoxColumn
+    {
+        public DarkDataGridViewCheckBoxColumn()
+        {
+            CellTemplate = new DarkDataGridViewCheckBoxCell();
+            base.FlatStyle = FlatStyle.Flat;
+        }
+
+        [DefaultValue(FlatStyle.Flat)]
+        public new FlatStyle FlatStyle
+        {
+            get { return FlatStyle.Flat; }
+        }
+
+        public sealed override DataGridViewCell CellTemplate
+        {
+            get { return base.CellTemplate; }
+            set { base.CellTemplate = value; }
         }
     }
 

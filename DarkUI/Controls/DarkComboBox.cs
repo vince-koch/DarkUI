@@ -3,6 +3,8 @@ using System.ComponentModel;
 using System.Drawing;
 using System.Windows.Forms;
 using DarkUI.Config;
+using System.Windows.Forms.Design;
+using DarkUI.Extensions;
 
 namespace DarkUI.Controls
 {
@@ -13,6 +15,7 @@ namespace DarkUI.Controls
         #endregion
 
         #region Fields
+
         // Visual look
         private static readonly Brush _focusBrush = new SolidBrush(SystemColors.Highlight);
         private Color _borderColor = Colors.GreySelection;
@@ -22,6 +25,7 @@ namespace DarkUI.Controls
 
         // Text
         private Padding _textPadding = new Padding(2);
+        
         #endregion Fields
 
         #region Constructor
@@ -233,7 +237,11 @@ namespace DarkUI.Controls
             // Draw background
             using (var buttonBrush = new SolidBrush(_buttonColor))
                 e.Graphics.FillRectangle(buttonBrush, buttonRect);
-            e.Graphics.DrawImage(_buttonIcon, buttonIconRect);
+
+            // Draw arrow
+            e.Graphics.DrawImage(_buttonIcon.SetOpacity(Colors.Brightness), buttonIconRect);
+
+            // Draw borders
             ControlPaint.DrawBorder(e.Graphics, buttonRect, _borderColor, ButtonBorderStyle.Solid);
             ControlPaint.DrawBorder(e.Graphics, ClientRectangle, _borderColor, ButtonBorderStyle.Solid);
 

@@ -79,6 +79,9 @@
     <Compile Include="Controls\DarkNumericUpDown.cs">
       <SubType>Component</SubType>
     </Compile>
+    <Compile Include="Controls\DarkPanel.cs">
+      <SubType>Component</SubType>
+    </Compile>
     <Compile Include="Controls\DarkProgressBar.cs">
       <SubType>Component</SubType>
     </Compile>
@@ -176,6 +179,7 @@
     <Compile Include="Docking\DockRegionState.cs" />
     <Compile Include="Docking\DockInsertType.cs" />
     <Compile Include="Extensions\BitmapExtensions.cs" />
+    <Compile Include="Extensions\ColorExtensions.cs" />
     <Compile Include="Extensions\ProgressBarExtensions.cs" />
     <Compile Include="Forms\DarkDialog.cs">
       <SubType>Form</SubType>
@@ -236,6 +240,7 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>TreeViewIcons.resx</DependentUpon>
     </Compile>
+    <Compile Include="Renderers\DarkStatusStripRenderer.cs" />
     <Compile Include="Win32\ControlScrollFilter.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Renderers\DarkMenuRenderer.cs" />

@@ -5,21 +5,48 @@ using System.Reflection;
 using System.Security;
 using System.Windows.Forms;
 using DarkUI.Config;
+using DarkUI.Extensions;
 
 namespace DarkUI.Controls
 {
     public class DarkNumericUpDown : NumericUpDown
     {
+        #region Field Region
+
+        private bool _mouseDown;
+        private Point? _mousePos;
+
+        #endregion Field Region
+
+        #region Property Region
+
         [Category("Data")]
         [Description("Determines increment value used with shift modifier.")]
         public decimal IncrementAlternate { get; set; } = 1.0M;
 
         [Category("Behavior")]
-        [Description("Forces mousewheel to scroll by one increment.")]
-        public bool MousewheelSingleIncrement { get; set; } = true;
+        [Description("Jumps to minimum value if maximum is reached.")]
+        public bool LoopValues { get; set; } = false;
 
-        private bool _mouseDown;
-        private Point? _mousePos;
+        [ReadOnly(true)]
+        [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
+        public new Color BackColor
+        {
+            get { return Colors.LightBackground; }
+            set { base.BackColor = Colors.LightBackground; }
+        }
+
+        [ReadOnly(true)]
+        [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
+        public new Color ForeColor
+        {
+            get { return Colors.LightText; }
+            set { base.ForeColor = Colors.LightText; }
+        }
+
+        #endregion Property Region
+
+        #region Constructor Region
 
         public DarkNumericUpDown()
         {
@@ -48,6 +75,43 @@ namespace DarkUI.Controls
             {
                 // Don't do anything, we are running in a trusted contex.
             }
+        }
+
+        #endregion Constructor Region
+
+        #region Method Region
+
+        private void SubControlPaint_Paint(object sender, PaintEventArgs e)
+        {
+            var upDownRect = new Rectangle(0, 0, Controls[0].Width + 1, Controls[0].Height);
+
+            // Up arrow
+            Bitmap flippedIcon = Icons.NumericUpDownIcons.numericUpDown_arrow;
+            flippedIcon.RotateFlip(RotateFlipType.RotateNoneFlipY);
+            RenderArrow(flippedIcon, new Rectangle(upDownRect.X, upDownRect.Y, upDownRect.Width, upDownRect.Height / 2), e);
+
+            // Down arrow
+            RenderArrow(Icons.NumericUpDownIcons.numericUpDown_arrow,
+                new Rectangle(upDownRect.X, upDownRect.Y + upDownRect.Height / 2, upDownRect.Width, upDownRect.Height - upDownRect.Height / 2), e);
+        }
+
+        private void RenderArrow(Image image, Rectangle area, PaintEventArgs e)
+        {
+            Color backColor;
+            if (!Enabled)
+                backColor = Colors.DarkGreySelection;
+            else if (!_mousePos.HasValue || !area.Contains(_mousePos.Value))
+                backColor = Colors.LightBackground;
+            else if (!_mouseDown)
+                backColor = Colors.LighterBackground;
+            else
+                backColor = Colors.LightestBackground;
+
+            using (Brush brush = new SolidBrush(backColor))
+                e.Graphics.FillRectangle(brush, area);
+            e.Graphics.DrawImage(image.SetOpacity(Colors.Brightness), new Point(area.X + (area.Width - image.Width) / 2, area.Y + (area.Height - image.Height) / 2));
+
+            ControlPaint.DrawBorder(e.Graphics, area, Colors.GreySelection, ButtonBorderStyle.Solid);
         }
 
         protected override void OnMouseDown(MouseEventArgs mevent)
@@ -79,78 +143,52 @@ namespace DarkUI.Controls
             Controls[0].Invalidate();
         }
 
-        private void SubControlPaint_Paint(object sender, PaintEventArgs e)
-        {
-            var upDownRect = new Rectangle(0, 0, Controls[0].Width+1, Controls[0].Height);
-
-            // Up arrow
-            Bitmap flippedIcon = Icons.NumericUpDownIcons.numericUpDown_arrow;
-            flippedIcon.RotateFlip(RotateFlipType.RotateNoneFlipY);
-            RenderArrow(flippedIcon, new Rectangle(upDownRect.X, upDownRect.Y, upDownRect.Width, upDownRect.Height / 2), e);
-
-            // Down arrow
-            RenderArrow(Icons.NumericUpDownIcons.numericUpDown_arrow,
-                new Rectangle(upDownRect.X, upDownRect.Y + upDownRect.Height / 2, upDownRect.Width, upDownRect.Height - upDownRect.Height / 2), e);
-        }
-
-        private void RenderArrow(Image image, Rectangle area, PaintEventArgs e)
-        {
-            Color backColor;
-            if (!Enabled)
-                backColor = Colors.DarkGreySelection;
-            else if (!_mousePos.HasValue || !area.Contains(_mousePos.Value))
-                backColor = Colors.LightBackground;
-            else if (!_mouseDown)
-                backColor = Colors.LighterBackground;
-            else
-                backColor = Colors.LightestBackground;
-
-            using (Brush brush = new SolidBrush(backColor))
-                e.Graphics.FillRectangle(brush, area);
-            e.Graphics.DrawImage(image, new Point(area.X + (area.Width - image.Width) / 2, area.Y + (area.Height - image.Height) / 2));
-            ControlPaint.DrawBorder(e.Graphics, area, Colors.GreySelection, ButtonBorderStyle.Solid);
-        }
-
         protected override void OnPaint(PaintEventArgs e)
         {
             base.OnPaint(e);
-            ControlPaint.DrawBorder(e.Graphics, ClientRectangle, Color.FromArgb(100, 100, 100), ButtonBorderStyle.Solid);
+            ControlPaint.DrawBorder(e.Graphics, ClientRectangle, Colors.GreySelection, ButtonBorderStyle.Solid);
         }
 
         protected override void OnMouseWheel(MouseEventArgs e)
         {
-            if (MousewheelSingleIncrement)
-            {
-                decimal newValue = Value;
+            decimal newValue = Value;
 
-                if (e.Delta > 0)
-                    newValue -= ModifierKeys == Keys.Shift ? IncrementAlternate : Increment;
-                else
-                    newValue += ModifierKeys == Keys.Shift ? IncrementAlternate : Increment;
+            if (e.Delta > 0)
+                newValue += ModifierKeys == Keys.Shift ? IncrementAlternate : Increment;
+            else
+                newValue -= ModifierKeys == Keys.Shift ? IncrementAlternate : Increment;
 
+            if (LoopValues)
+                Value = newValue > Maximum ? Minimum + (newValue % Maximum) : (newValue < Minimum ? Maximum + (newValue % Maximum) : newValue);
+            else
                 Value = Math.Min(Maximum, Math.Max(Minimum, newValue));
 
-                var eH = e as HandledMouseEventArgs;
-                if (eH != null) eH.Handled = true;
-            }
-            else
-                base.OnMouseWheel(e);
+            var eH = e as HandledMouseEventArgs;
+            if (eH != null) eH.Handled = true;
         }
 
         public override void UpButton()
         {
-            if (ModifierKeys.HasFlag(Keys.Shift))
-                Value = Math.Min(Maximum, Value + IncrementAlternate);
+            decimal newValue = Value;
+            newValue += ModifierKeys == Keys.Shift ? IncrementAlternate : Increment;
+
+            if (LoopValues)
+                Value = newValue > Maximum ? Minimum + (newValue % Maximum) : (newValue < Minimum ? Maximum + (newValue % Maximum) : newValue);
             else
-                base.UpButton();
+                Value = Math.Min(Maximum, newValue);
         }
 
         public override void DownButton()
         {
-            if (ModifierKeys.HasFlag(Keys.Shift))
-                Value = Math.Max(Minimum, Value - IncrementAlternate);
+            decimal newValue = Value;
+            newValue -= ModifierKeys == Keys.Shift ? IncrementAlternate : Increment;
+
+            if (LoopValues)
+                Value = newValue > Maximum ? Minimum + (newValue % Maximum) : (newValue < Minimum ? Maximum + (newValue % Maximum) : newValue);
             else
-                base.DownButton();
+                Value = Math.Max(Minimum, newValue);
         }
+
+        #endregion Method Region
     }
 }
