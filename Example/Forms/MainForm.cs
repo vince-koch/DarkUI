@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using System.IO;
 using System.Windows.Forms;
 using System.Xml.Serialization;
+
+using DarkUI.Config;
 using DarkUI.Docking;
 using DarkUI.Forms;
 using DarkUI.Win32;
@@ -81,6 +83,16 @@ namespace Example.Forms
             DockPanel.AddContent(new DockDocument("Document 1", Icons.document_16xLG));
             DockPanel.AddContent(new DockDocument("Document 2", Icons.document_16xLG));
             DockPanel.AddContent(new DockDocument("Document 3", Icons.document_16xLG));
+
+            darkThemeButton.Click += (object sender, EventArgs e) =>
+            {
+                DarkUI.Config.Colors.ActiveTheme = new DarkTheme();
+            };
+
+            lightThemeButton.Click += (object sender, EventArgs e) =>
+            {
+                DarkUI.Config.Colors.ActiveTheme = new LightTheme();
+            };
         }
 
         #endregion

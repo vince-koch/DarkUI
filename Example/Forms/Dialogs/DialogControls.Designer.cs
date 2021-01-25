@@ -31,26 +31,26 @@ namespace Example.Forms.Dialogs
         private void InitializeComponent()
         {
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(DialogControls));
-            this.pnlMain = new System.Windows.Forms.Panel();
+            this.pnlMain = new DarkPanel();
             this.tblMain = new System.Windows.Forms.TableLayoutPanel();
             this.pnlTreeView = new DarkUI.Controls.DarkSectionPanel();
             this.treeTest = new DarkUI.Controls.DarkTreeView();
             this.pnlListView = new DarkUI.Controls.DarkSectionPanel();
             this.lstTest = new DarkUI.Controls.DarkListView();
             this.pnlMessageBox = new DarkUI.Controls.DarkSectionPanel();
-            this.panel1 = new System.Windows.Forms.Panel();
-            this.panel5 = new System.Windows.Forms.Panel();
+            this.panel1 = new DarkPanel();
+            this.panel5 = new DarkPanel();
             this.darkRadioButton3 = new DarkUI.Controls.DarkRadioButton();
             this.darkRadioButton2 = new DarkUI.Controls.DarkRadioButton();
             this.darkRadioButton1 = new DarkUI.Controls.DarkRadioButton();
             this.darkTitle3 = new DarkUI.Controls.DarkTitle();
-            this.panel4 = new System.Windows.Forms.Panel();
+            this.panel4 = new DarkPanel();
             this.darkCheckBox2 = new DarkUI.Controls.DarkCheckBox();
             this.darkCheckBox1 = new DarkUI.Controls.DarkCheckBox();
             this.darkTitle2 = new DarkUI.Controls.DarkTitle();
-            this.panel3 = new System.Windows.Forms.Panel();
+            this.panel3 = new DarkPanel();
             this.btnMessageBox = new DarkUI.Controls.DarkButton();
-            this.panel2 = new System.Windows.Forms.Panel();
+            this.panel2 = new DarkPanel();
             this.btnDialog = new DarkUI.Controls.DarkButton();
             this.darkTitle1 = new DarkUI.Controls.DarkTitle();
             this.pnlMain.SuspendLayout();
@@ -343,22 +343,22 @@ namespace Example.Forms.Dialogs
 
         #endregion
 
-        private System.Windows.Forms.Panel pnlMain;
+        private DarkPanel pnlMain;
         private System.Windows.Forms.TableLayoutPanel tblMain;
         private DarkSectionPanel pnlTreeView;
         private DarkTreeView treeTest;
         private DarkSectionPanel pnlListView;
         private DarkListView lstTest;
         private DarkSectionPanel pnlMessageBox;
-        private System.Windows.Forms.Panel panel1;
-        private System.Windows.Forms.Panel panel2;
+        private DarkPanel panel1;
+        private DarkPanel panel2;
         private DarkButton btnDialog;
-        private System.Windows.Forms.Panel panel4;
-        private System.Windows.Forms.Panel panel3;
+        private DarkPanel panel4;
+        private DarkPanel panel3;
         private DarkButton btnMessageBox;
         private DarkCheckBox darkCheckBox2;
         private DarkCheckBox darkCheckBox1;
-        private System.Windows.Forms.Panel panel5;
+        private DarkPanel panel5;
         private DarkRadioButton darkRadioButton2;
         private DarkRadioButton darkRadioButton1;
         private DarkRadioButton darkRadioButton3;

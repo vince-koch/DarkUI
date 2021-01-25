@@ -31,9 +31,23 @@ namespace DarkUI.Controls
             ForeColor = Colors.LightText;
             Padding = new Padding(2, 2, 2, 2);
             BorderStyle = BorderStyle.FixedSingle;
+
+            Colors.ThemeChanged += HandleThemeChanged;
         }
 
         #endregion
+
+        protected override void DestroyHandle()
+        {
+            Colors.ThemeChanged -= HandleThemeChanged;
+            base.DestroyHandle();
+        }
+
+        private void HandleThemeChanged(object sender, ThemeChangedEventArgs e)
+        {
+            BackColor = e.Theme.DarkBackground;
+            ForeColor = e.Theme.LightText;
+        }
 
         #region Property Region
 

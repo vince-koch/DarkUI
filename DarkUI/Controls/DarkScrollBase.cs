@@ -123,8 +123,22 @@ namespace DarkUI.Controls
             VScrollBar.MouseDown += delegate { Select(); };
             HScrollBar.MouseDown += delegate { Select(); };
 
+            Colors.ThemeChanged += HandleThemeChanged;
+
             _dragTimer = new Timer {Interval = 1};
             _dragTimer.Tick += DragTimer_Tick;
+        }
+
+        protected override void OnHandleDestroyed(EventArgs e)
+        {
+            Colors.ThemeChanged -= HandleThemeChanged;
+            base.OnHandleDestroyed(e);
+        }
+
+        private void HandleThemeChanged(object sender, ThemeChangedEventArgs e)
+        {
+            BackColor = Colors.GreyBackground;
+            ForeColor = Colors.LightText;
         }
 
         #endregion

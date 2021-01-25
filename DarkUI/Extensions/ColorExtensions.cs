@@ -17,5 +17,17 @@ namespace DarkUI.Extensions
         public static Color Multiply(this Color color, float mul) => Multiply(color, mul, mul, mul, 1.0f);
         public static Color Multiply(this Color color, float mulR, float mulG, float mulB) => Multiply(color, mulR, mulG, mulB, 1.0f);
         public static Color MultiplyAlpha(this Color color, float mul) => Multiply(color, 1.0f, 1.0f, 1.0f, mul);
+
+        public static Color Invert(this Color color)
+        {
+            return Color.FromArgb(color.ToArgb() ^ 0xffffff);
+        }
+
+        public static Color MaybeInvert(this Color color, bool isInverted)
+        {
+            return isInverted 
+                ? color.Invert()
+                : color;
+        }
     }
 }

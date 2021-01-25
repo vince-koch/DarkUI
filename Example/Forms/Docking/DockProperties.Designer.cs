@@ -28,13 +28,13 @@
         /// </summary>
         private void InitializeComponent()
         {
-            this.pnlMain = new System.Windows.Forms.Panel();
-            this.panel1 = new System.Windows.Forms.Panel();
+            this.pnlMain = new DarkUI.Controls.DarkPanel();
+            this.panel1 = new DarkUI.Controls.DarkPanel();
             this.darkRadioButton3 = new DarkUI.Controls.DarkRadioButton();
             this.darkRadioButton2 = new DarkUI.Controls.DarkRadioButton();
             this.darkRadioButton1 = new DarkUI.Controls.DarkRadioButton();
             this.darkTitle1 = new DarkUI.Controls.DarkTitle();
-            this.panel2 = new System.Windows.Forms.Panel();
+            this.panel2 = new DarkUI.Controls.DarkPanel();
             this.darkCheckBox3 = new DarkUI.Controls.DarkCheckBox();
             this.darkCheckBox2 = new DarkUI.Controls.DarkCheckBox();
             this.darkCheckBox1 = new DarkUI.Controls.DarkCheckBox();
@@ -194,13 +194,13 @@
 
         #endregion
 
-        private System.Windows.Forms.Panel pnlMain;
-        private System.Windows.Forms.Panel panel1;
+        private DarkUI.Controls.DarkPanel pnlMain;
+        private DarkUI.Controls.DarkPanel panel1;
         private DarkUI.Controls.DarkRadioButton darkRadioButton3;
         private DarkUI.Controls.DarkRadioButton darkRadioButton2;
         private DarkUI.Controls.DarkRadioButton darkRadioButton1;
         private DarkUI.Controls.DarkTitle darkTitle1;
-        private System.Windows.Forms.Panel panel2;
+        private DarkUI.Controls.DarkPanel panel2;
         private DarkUI.Controls.DarkCheckBox darkCheckBox3;
         private DarkUI.Controls.DarkCheckBox darkCheckBox2;
         private DarkUI.Controls.DarkCheckBox darkCheckBox1;

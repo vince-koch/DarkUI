@@ -25,7 +25,8 @@ namespace DarkUI.Controls
         protected override void OnDrawItem(DrawItemEventArgs e)
         {
             int index = e.Index >= 0 ? e.Index : 0;
-            if (index > Items.Count - 1) return;
+            if (index > Items.Count - 1) 
+                return;
 
             Rectangle bounds = new Rectangle(e.Bounds.X, e.Bounds.Y, e.Bounds.Width, e.Bounds.Height);
 
@@ -41,6 +42,7 @@ namespace DarkUI.Controls
 
             var formatE = new ListControlConvertEventArgs(null, typeof(string), Items[e.Index]);
             OnFormat(formatE);
+
             string text = formatE.Value?.ToString() ?? Items[e.Index].ToString();
             e.Graphics.DrawString(text, e.Font, Brushes.White, bounds, StringFormat.GenericDefault);
         }

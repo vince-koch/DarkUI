@@ -48,6 +48,7 @@
     <Compile Include="Collections\SortableBindingList.cs" />
     <Compile Include="Config\Colors.cs" />
     <Compile Include="Config\Consts.cs" />
+    <Compile Include="Config\ITheme.cs" />
     <Compile Include="Controls\DarkButtonStyle.cs" />
     <Compile Include="Controls\DarkCheckBox.cs">
       <SubType>Component</SubType>
@@ -62,6 +63,9 @@
       <SubType>Component</SubType>
     </Compile>
     <Compile Include="Controls\DarkFloatingToolBox.cs" />
+    <Compile Include="Controls\DarkFlowLayoutPanel.cs">
+      <SubType>Component</SubType>
+    </Compile>
     <Compile Include="Controls\DarkGroupBox.cs">
       <SubType>Component</SubType>
     </Compile>

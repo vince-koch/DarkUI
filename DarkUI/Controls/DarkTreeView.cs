@@ -154,6 +154,22 @@ namespace DarkUI.Controls
             MaxDragChange = _itemHeight;
 
             LoadIcons();
+
+            Colors.ThemeChanged += HandleThemeChanged;
+        }
+
+        protected override void DestroyHandle()
+        {
+            Colors.ThemeChanged -= HandleThemeChanged;
+            base.DestroyHandle();
+        }
+
+        private void HandleThemeChanged(object sender, ThemeChangedEventArgs e)
+        {
+            OddNodeColor = Colors.HeaderBackground;
+            EvenNodeColor = Colors.GreyBackground;
+            FocusedNodeColor = Colors.BlueSelection;
+            NonFocusedNodeColor = Colors.GreySelection;
         }
 
         #endregion

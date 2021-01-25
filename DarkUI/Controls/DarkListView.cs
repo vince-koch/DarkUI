@@ -529,7 +529,8 @@ namespace DarkUI.Controls
                     }
 
                     // Text
-                    using (var b = new SolidBrush(Items[i].TextColor))
+                    //using (var b = new SolidBrush(Items[i].TextColor))
+                    using (var b = new SolidBrush(Colors.LightText))
                     {
                         var stringFormat = new StringFormat
                         {

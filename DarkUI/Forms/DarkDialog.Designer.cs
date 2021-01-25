@@ -30,8 +30,8 @@ namespace DarkUI.Forms
         /// </summary>
         private void InitializeComponent()
         {
-            this.pnlFooter = new System.Windows.Forms.Panel();
-            this.flowInner = new System.Windows.Forms.FlowLayoutPanel();
+            this.pnlFooter = new DarkPanel();
+            this.flowInner = new DarkFlowLayoutPanel();
             this.btnOk = new DarkButton();
             this.btnCancel = new DarkButton();
             this.btnYes = new DarkButton();
@@ -161,8 +161,8 @@ namespace DarkUI.Forms
 
         #endregion
 
-        private System.Windows.Forms.Panel pnlFooter;
-        private System.Windows.Forms.FlowLayoutPanel flowInner;
+        private DarkPanel pnlFooter;
+        private DarkFlowLayoutPanel flowInner;
         protected DarkButton btnYes;
         protected DarkButton btnNo;
         protected DarkButton btnOk;

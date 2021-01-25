@@ -31,7 +31,7 @@ namespace Example.Forms.Dialogs
         private void InitializeComponent()
         {
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(DialogAbout));
-            this.pnlMain = new System.Windows.Forms.Panel();
+            this.pnlMain = new DarkPanel();
             this.lblVersion = new DarkLabel();
             this.darkLabel3 = new DarkLabel();
             this.darkLabel2 = new DarkLabel();
@@ -138,7 +138,7 @@ namespace Example.Forms.Dialogs
 
         #endregion
 
-        private System.Windows.Forms.Panel pnlMain;
+        private DarkPanel pnlMain;
         private DarkLabel lblHeader;
         private DarkLabel darkLabel1;
         private DarkLabel darkLabel3;

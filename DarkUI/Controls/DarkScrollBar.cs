@@ -150,6 +150,8 @@ namespace DarkUI.Controls
             _scrollTimer = new Timer();
             _scrollTimer.Interval = 1;
             _scrollTimer.Tick += ScrollTimerTick;
+
+            Colors.ThemeChanged += HandleThemeChanged;
         }
 
         #endregion
@@ -474,22 +476,20 @@ namespace DarkUI.Controls
 
         #region Paint Region
 
+        protected override void DestroyHandle()
+        {
+            Colors.ThemeChanged -= HandleThemeChanged;
+            base.DestroyHandle();
+        }
+
+        private void HandleThemeChanged(object sender, ThemeChangedEventArgs e)
+        {
+            BackColor = Colors.DarkBackground;
+        }
+
         protected override void OnPaint(PaintEventArgs e)
         {
             var g = e.Graphics;
-
-            // DEBUG: Scrollbar bg
-            /*using (var b = new SolidBrush(Colors.MediumBackground))
-            {
-                g.FillRectangle(b, ClientRectangle);
-            }*/
-
-            // DEBUG: Arrow backgrounds
-            /*using (var b = new SolidBrush(Color.White))
-            {
-                g.FillRectangle(b, _upArrowArea);
-                g.FillRectangle(b, _downArrowArea);
-            }*/
 
             // Up arrow
             var upIcon = _upArrowHot ? ScrollIcons.scrollbar_arrow_hot : ScrollIcons.scrollbar_arrow_standard;

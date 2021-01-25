@@ -61,6 +61,8 @@ namespace Example.Forms
             this.toolStripStatusLabel5 = new System.Windows.Forms.ToolStripStatusLabel();
             this.DockPanel = new DarkUI.Docking.DarkDockPanel();
             this.darkSeparator1 = new DarkUI.Controls.DarkSeparator();
+            this.lightThemeButton = new DarkUI.Controls.DarkButton();
+            this.darkThemeButton = new DarkUI.Controls.DarkButton();
             this.mnuMain.SuspendLayout();
             this.toolMain.SuspendLayout();
             this.stripMain.SuspendLayout();
@@ -70,6 +72,7 @@ namespace Example.Forms
             // 
             this.mnuMain.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(60)))), ((int)(((byte)(63)))), ((int)(((byte)(65)))));
             this.mnuMain.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(220)))), ((int)(((byte)(220)))), ((int)(((byte)(220)))));
+            this.mnuMain.ImageScalingSize = new System.Drawing.Size(20, 20);
             this.mnuMain.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.mnuFile,
             this.mnuView,
@@ -79,19 +82,20 @@ namespace Example.Forms
             this.mnuMain.Location = new System.Drawing.Point(0, 0);
             this.mnuMain.Name = "mnuMain";
             this.mnuMain.Padding = new System.Windows.Forms.Padding(3, 2, 0, 2);
-            this.mnuMain.Size = new System.Drawing.Size(944, 24);
+            this.mnuMain.Size = new System.Drawing.Size(944, 30);
             this.mnuMain.TabIndex = 0;
             this.mnuMain.Text = "darkMenuStrip1";
             // 
             // mnuFile
             // 
+            this.mnuFile.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(60)))), ((int)(((byte)(63)))), ((int)(((byte)(65)))));
             this.mnuFile.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.mnuNewFile,
             this.toolStripSeparator1,
             this.mnuClose});
             this.mnuFile.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(220)))), ((int)(((byte)(220)))), ((int)(((byte)(220)))));
             this.mnuFile.Name = "mnuFile";
-            this.mnuFile.Size = new System.Drawing.Size(37, 20);
+            this.mnuFile.Size = new System.Drawing.Size(46, 26);
             this.mnuFile.Text = "&File";
             // 
             // mnuNewFile
@@ -100,7 +104,7 @@ namespace Example.Forms
             this.mnuNewFile.Image = global::Example.Icons.NewFile_6276;
             this.mnuNewFile.Name = "mnuNewFile";
             this.mnuNewFile.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.N)));
-            this.mnuNewFile.Size = new System.Drawing.Size(169, 22);
+            this.mnuNewFile.Size = new System.Drawing.Size(200, 26);
             this.mnuNewFile.Text = "&New file";
             // 
             // toolStripSeparator1
@@ -108,7 +112,7 @@ namespace Example.Forms
             this.toolStripSeparator1.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(220)))), ((int)(((byte)(220)))), ((int)(((byte)(220)))));
             this.toolStripSeparator1.Margin = new System.Windows.Forms.Padding(0, 0, 0, 1);
             this.toolStripSeparator1.Name = "toolStripSeparator1";
-            this.toolStripSeparator1.Size = new System.Drawing.Size(166, 6);
+            this.toolStripSeparator1.Size = new System.Drawing.Size(197, 6);
             // 
             // mnuClose
             // 
@@ -116,16 +120,17 @@ namespace Example.Forms
             this.mnuClose.Image = global::Example.Icons.Close_16xLG;
             this.mnuClose.Name = "mnuClose";
             this.mnuClose.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Alt | System.Windows.Forms.Keys.F4)));
-            this.mnuClose.Size = new System.Drawing.Size(169, 22);
+            this.mnuClose.Size = new System.Drawing.Size(200, 26);
             this.mnuClose.Text = "&Close";
             // 
             // mnuView
             // 
+            this.mnuView.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(60)))), ((int)(((byte)(63)))), ((int)(((byte)(65)))));
             this.mnuView.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.mnuDialog});
             this.mnuView.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(220)))), ((int)(((byte)(220)))), ((int)(((byte)(220)))));
             this.mnuView.Name = "mnuView";
-            this.mnuView.Size = new System.Drawing.Size(44, 20);
+            this.mnuView.Size = new System.Drawing.Size(55, 26);
             this.mnuView.Text = "&View";
             // 
             // mnuDialog
@@ -133,11 +138,12 @@ namespace Example.Forms
             this.mnuDialog.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(220)))), ((int)(((byte)(220)))), ((int)(((byte)(220)))));
             this.mnuDialog.Image = global::Example.Icons.properties_16xLG;
             this.mnuDialog.Name = "mnuDialog";
-            this.mnuDialog.Size = new System.Drawing.Size(130, 22);
+            this.mnuDialog.Size = new System.Drawing.Size(165, 26);
             this.mnuDialog.Text = "&Dialog test";
             // 
             // mnuTools
             // 
+            this.mnuTools.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(60)))), ((int)(((byte)(63)))), ((int)(((byte)(65)))));
             this.mnuTools.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.checkableToolStripMenuItem,
             this.checkableWithIconToolStripMenuItem,
@@ -146,7 +152,7 @@ namespace Example.Forms
             this.checkedWithIconToolStripMenuItem});
             this.mnuTools.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(220)))), ((int)(((byte)(220)))), ((int)(((byte)(220)))));
             this.mnuTools.Name = "mnuTools";
-            this.mnuTools.Size = new System.Drawing.Size(47, 20);
+            this.mnuTools.Size = new System.Drawing.Size(58, 26);
             this.mnuTools.Text = "&Tools";
             // 
             // checkableToolStripMenuItem
@@ -154,7 +160,7 @@ namespace Example.Forms
             this.checkableToolStripMenuItem.CheckOnClick = true;
             this.checkableToolStripMenuItem.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(220)))), ((int)(((byte)(220)))), ((int)(((byte)(220)))));
             this.checkableToolStripMenuItem.Name = "checkableToolStripMenuItem";
-            this.checkableToolStripMenuItem.Size = new System.Drawing.Size(181, 22);
+            this.checkableToolStripMenuItem.Size = new System.Drawing.Size(224, 26);
             this.checkableToolStripMenuItem.Text = "Checkable";
             // 
             // checkableWithIconToolStripMenuItem
@@ -163,7 +169,7 @@ namespace Example.Forms
             this.checkableWithIconToolStripMenuItem.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(220)))), ((int)(((byte)(220)))), ((int)(((byte)(220)))));
             this.checkableWithIconToolStripMenuItem.Image = global::Example.Icons.properties_16xLG;
             this.checkableWithIconToolStripMenuItem.Name = "checkableWithIconToolStripMenuItem";
-            this.checkableWithIconToolStripMenuItem.Size = new System.Drawing.Size(181, 22);
+            this.checkableWithIconToolStripMenuItem.Size = new System.Drawing.Size(224, 26);
             this.checkableWithIconToolStripMenuItem.Text = "Checkable with icon";
             // 
             // toolStripSeparator2
@@ -171,7 +177,7 @@ namespace Example.Forms
             this.toolStripSeparator2.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(220)))), ((int)(((byte)(220)))), ((int)(((byte)(220)))));
             this.toolStripSeparator2.Margin = new System.Windows.Forms.Padding(0, 0, 0, 1);
             this.toolStripSeparator2.Name = "toolStripSeparator2";
-            this.toolStripSeparator2.Size = new System.Drawing.Size(178, 6);
+            this.toolStripSeparator2.Size = new System.Drawing.Size(221, 6);
             // 
             // checkedToolStripMenuItem
             // 
@@ -179,7 +185,7 @@ namespace Example.Forms
             this.checkedToolStripMenuItem.CheckState = System.Windows.Forms.CheckState.Checked;
             this.checkedToolStripMenuItem.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(220)))), ((int)(((byte)(220)))), ((int)(((byte)(220)))));
             this.checkedToolStripMenuItem.Name = "checkedToolStripMenuItem";
-            this.checkedToolStripMenuItem.Size = new System.Drawing.Size(181, 22);
+            this.checkedToolStripMenuItem.Size = new System.Drawing.Size(224, 26);
             this.checkedToolStripMenuItem.Text = "Checked";
             // 
             // checkedWithIconToolStripMenuItem
@@ -189,11 +195,12 @@ namespace Example.Forms
             this.checkedWithIconToolStripMenuItem.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(220)))), ((int)(((byte)(220)))), ((int)(((byte)(220)))));
             this.checkedWithIconToolStripMenuItem.Image = global::Example.Icons.properties_16xLG;
             this.checkedWithIconToolStripMenuItem.Name = "checkedWithIconToolStripMenuItem";
-            this.checkedWithIconToolStripMenuItem.Size = new System.Drawing.Size(181, 22);
+            this.checkedWithIconToolStripMenuItem.Size = new System.Drawing.Size(224, 26);
             this.checkedWithIconToolStripMenuItem.Text = "Checked with icon";
             // 
             // mnuWindow
             // 
+            this.mnuWindow.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(60)))), ((int)(((byte)(63)))), ((int)(((byte)(65)))));
             this.mnuWindow.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.mnuProject,
             this.mnuProperties,
@@ -202,7 +209,7 @@ namespace Example.Forms
             this.mnuHistory});
             this.mnuWindow.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(220)))), ((int)(((byte)(220)))), ((int)(((byte)(220)))));
             this.mnuWindow.Name = "mnuWindow";
-            this.mnuWindow.Size = new System.Drawing.Size(63, 20);
+            this.mnuWindow.Size = new System.Drawing.Size(78, 26);
             this.mnuWindow.Text = "&Window";
             // 
             // mnuProject
@@ -210,7 +217,7 @@ namespace Example.Forms
             this.mnuProject.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(220)))), ((int)(((byte)(220)))), ((int)(((byte)(220)))));
             this.mnuProject.Image = global::Example.Icons.application_16x;
             this.mnuProject.Name = "mnuProject";
-            this.mnuProject.Size = new System.Drawing.Size(156, 22);
+            this.mnuProject.Size = new System.Drawing.Size(197, 26);
             this.mnuProject.Text = "&Project Explorer";
             // 
             // mnuProperties
@@ -218,7 +225,7 @@ namespace Example.Forms
             this.mnuProperties.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(220)))), ((int)(((byte)(220)))), ((int)(((byte)(220)))));
             this.mnuProperties.Image = global::Example.Icons.properties_16xLG;
             this.mnuProperties.Name = "mnuProperties";
-            this.mnuProperties.Size = new System.Drawing.Size(156, 22);
+            this.mnuProperties.Size = new System.Drawing.Size(197, 26);
             this.mnuProperties.Text = "P&roperties";
             // 
             // mnuConsole
@@ -226,7 +233,7 @@ namespace Example.Forms
             this.mnuConsole.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(220)))), ((int)(((byte)(220)))), ((int)(((byte)(220)))));
             this.mnuConsole.Image = global::Example.Icons.Console;
             this.mnuConsole.Name = "mnuConsole";
-            this.mnuConsole.Size = new System.Drawing.Size(156, 22);
+            this.mnuConsole.Size = new System.Drawing.Size(197, 26);
             this.mnuConsole.Text = "&Console";
             // 
             // mnuLayers
@@ -234,7 +241,7 @@ namespace Example.Forms
             this.mnuLayers.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(220)))), ((int)(((byte)(220)))), ((int)(((byte)(220)))));
             this.mnuLayers.Image = global::Example.Icons.Collection_16xLG;
             this.mnuLayers.Name = "mnuLayers";
-            this.mnuLayers.Size = new System.Drawing.Size(156, 22);
+            this.mnuLayers.Size = new System.Drawing.Size(197, 26);
             this.mnuLayers.Text = "&Layers";
             // 
             // mnuHistory
@@ -242,16 +249,17 @@ namespace Example.Forms
             this.mnuHistory.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(220)))), ((int)(((byte)(220)))), ((int)(((byte)(220)))));
             this.mnuHistory.Image = ((System.Drawing.Image)(resources.GetObject("mnuHistory.Image")));
             this.mnuHistory.Name = "mnuHistory";
-            this.mnuHistory.Size = new System.Drawing.Size(156, 22);
+            this.mnuHistory.Size = new System.Drawing.Size(197, 26);
             this.mnuHistory.Text = "&History";
             // 
             // mnuHelp
             // 
+            this.mnuHelp.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(60)))), ((int)(((byte)(63)))), ((int)(((byte)(65)))));
             this.mnuHelp.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.mnuAbout});
             this.mnuHelp.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(220)))), ((int)(((byte)(220)))), ((int)(((byte)(220)))));
             this.mnuHelp.Name = "mnuHelp";
-            this.mnuHelp.Size = new System.Drawing.Size(44, 20);
+            this.mnuHelp.Size = new System.Drawing.Size(55, 26);
             this.mnuHelp.Text = "&Help";
             // 
             // mnuAbout
@@ -259,7 +267,7 @@ namespace Example.Forms
             this.mnuAbout.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(220)))), ((int)(((byte)(220)))), ((int)(((byte)(220)))));
             this.mnuAbout.Image = global::Example.Icons.StatusAnnotations_Information_16xLG_color;
             this.mnuAbout.Name = "mnuAbout";
-            this.mnuAbout.Size = new System.Drawing.Size(145, 22);
+            this.mnuAbout.Size = new System.Drawing.Size(182, 26);
             this.mnuAbout.Text = "&About DarkUI";
             // 
             // toolMain
@@ -268,9 +276,10 @@ namespace Example.Forms
             this.toolMain.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(60)))), ((int)(((byte)(63)))), ((int)(((byte)(65)))));
             this.toolMain.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(220)))), ((int)(((byte)(220)))), ((int)(((byte)(220)))));
             this.toolMain.GripStyle = System.Windows.Forms.ToolStripGripStyle.Hidden;
+            this.toolMain.ImageScalingSize = new System.Drawing.Size(20, 20);
             this.toolMain.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.btnNewFile});
-            this.toolMain.Location = new System.Drawing.Point(0, 26);
+            this.toolMain.Location = new System.Drawing.Point(0, 32);
             this.toolMain.Name = "toolMain";
             this.toolMain.Padding = new System.Windows.Forms.Padding(5, 0, 1, 0);
             this.toolMain.Size = new System.Drawing.Size(944, 28);
@@ -280,6 +289,7 @@ namespace Example.Forms
             // btnNewFile
             // 
             this.btnNewFile.AutoSize = false;
+            this.btnNewFile.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(60)))), ((int)(((byte)(63)))), ((int)(((byte)(65)))));
             this.btnNewFile.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
             this.btnNewFile.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(220)))), ((int)(((byte)(220)))), ((int)(((byte)(220)))));
             this.btnNewFile.Image = global::Example.Icons.NewFile_6276;
@@ -290,9 +300,9 @@ namespace Example.Forms
             // 
             // stripMain
             // 
-            this.stripMain.AutoSize = false;
             this.stripMain.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(60)))), ((int)(((byte)(63)))), ((int)(((byte)(65)))));
             this.stripMain.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(220)))), ((int)(((byte)(220)))), ((int)(((byte)(220)))));
+            this.stripMain.ImageScalingSize = new System.Drawing.Size(20, 20);
             this.stripMain.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.toolStripStatusLabel1,
             this.toolStripStatusLabel6,
@@ -301,13 +311,13 @@ namespace Example.Forms
             this.stripMain.Name = "stripMain";
             this.stripMain.Padding = new System.Windows.Forms.Padding(0, 5, 0, 3);
             this.stripMain.Size = new System.Drawing.Size(944, 24);
-            this.stripMain.SizingGrip = false;
             this.stripMain.TabIndex = 2;
             this.stripMain.Text = "darkStatusStrip1";
             // 
             // toolStripStatusLabel1
             // 
             this.toolStripStatusLabel1.AutoSize = false;
+            this.toolStripStatusLabel1.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(60)))), ((int)(((byte)(63)))), ((int)(((byte)(65)))));
             this.toolStripStatusLabel1.Margin = new System.Windows.Forms.Padding(1, 0, 50, 0);
             this.toolStripStatusLabel1.Name = "toolStripStatusLabel1";
             this.toolStripStatusLabel1.Size = new System.Drawing.Size(39, 16);
@@ -316,43 +326,64 @@ namespace Example.Forms
             // 
             // toolStripStatusLabel6
             // 
+            this.toolStripStatusLabel6.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(60)))), ((int)(((byte)(63)))), ((int)(((byte)(65)))));
             this.toolStripStatusLabel6.Margin = new System.Windows.Forms.Padding(0, 0, 50, 2);
             this.toolStripStatusLabel6.Name = "toolStripStatusLabel6";
-            this.toolStripStatusLabel6.Size = new System.Drawing.Size(757, 14);
+            this.toolStripStatusLabel6.Size = new System.Drawing.Size(744, 14);
             this.toolStripStatusLabel6.Spring = true;
             this.toolStripStatusLabel6.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             // 
             // toolStripStatusLabel5
             // 
+            this.toolStripStatusLabel5.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(60)))), ((int)(((byte)(63)))), ((int)(((byte)(65)))));
             this.toolStripStatusLabel5.Margin = new System.Windows.Forms.Padding(0, 0, 1, 0);
             this.toolStripStatusLabel5.Name = "toolStripStatusLabel5";
-            this.toolStripStatusLabel5.Size = new System.Drawing.Size(46, 16);
+            this.toolStripStatusLabel5.Size = new System.Drawing.Size(59, 16);
             this.toolStripStatusLabel5.Text = "120 MB";
             this.toolStripStatusLabel5.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             // 
             // DockPanel
             // 
-            this.DockPanel.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(60)))), ((int)(((byte)(63)))), ((int)(((byte)(65)))));
             this.DockPanel.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.DockPanel.Location = new System.Drawing.Point(0, 54);
+            this.DockPanel.Location = new System.Drawing.Point(0, 60);
             this.DockPanel.Name = "DockPanel";
-            this.DockPanel.Size = new System.Drawing.Size(944, 564);
+            this.DockPanel.Size = new System.Drawing.Size(944, 558);
             this.DockPanel.TabIndex = 3;
             // 
             // darkSeparator1
             // 
             this.darkSeparator1.Dock = System.Windows.Forms.DockStyle.Top;
-            this.darkSeparator1.Location = new System.Drawing.Point(0, 24);
+            this.darkSeparator1.Location = new System.Drawing.Point(0, 30);
             this.darkSeparator1.Name = "darkSeparator1";
             this.darkSeparator1.Size = new System.Drawing.Size(944, 2);
             this.darkSeparator1.TabIndex = 4;
             this.darkSeparator1.Text = "darkSeparator1";
             // 
+            // lightThemeButton
+            // 
+            this.lightThemeButton.Checked = false;
+            this.lightThemeButton.Location = new System.Drawing.Point(439, 3);
+            this.lightThemeButton.Name = "lightThemeButton";
+            this.lightThemeButton.Size = new System.Drawing.Size(75, 23);
+            this.lightThemeButton.TabIndex = 7;
+            this.lightThemeButton.Text = "light";
+            // 
+            // darkThemeButton
+            // 
+            this.darkThemeButton.Checked = false;
+            this.darkThemeButton.Location = new System.Drawing.Point(358, 3);
+            this.darkThemeButton.Name = "darkThemeButton";
+            this.darkThemeButton.Size = new System.Drawing.Size(75, 23);
+            this.darkThemeButton.TabIndex = 8;
+            this.darkThemeButton.Text = "dark";
+            // 
             // MainForm
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
+            this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 20F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(944, 642);
+            this.Controls.Add(this.darkThemeButton);
+            this.Controls.Add(this.lightThemeButton);
             this.Controls.Add(this.DockPanel);
             this.Controls.Add(this.stripMain);
             this.Controls.Add(this.toolMain);
@@ -407,6 +438,8 @@ namespace Example.Forms
         private System.Windows.Forms.ToolStripSeparator toolStripSeparator2;
         private System.Windows.Forms.ToolStripMenuItem checkedToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem checkedWithIconToolStripMenuItem;
+        private DarkButton lightThemeButton;
+        private DarkButton darkThemeButton;
     }
 }
 
